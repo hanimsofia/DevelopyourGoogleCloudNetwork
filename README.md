@@ -28,18 +28,18 @@ Allocate cost effective resource sizes. Projects are monitored and excessive res
 ### Task 1. Create development VPC manually
 Create a VPC called griffin-dev-vpc with the following subnets only:
   
-  griffin-dev-wp
-    IP address block: 192.168.16.0/20
-  griffin-dev-mgmt
-    IP address block: 192.168.32.0/20
+    griffin-dev-wp
+      IP address block: 192.168.16.0/20
+    griffin-dev-mgmt
+      IP address block: 192.168.32.0/20
   
 ### Task 2. Create production VPC manually
 Create a VPC called griffin-prod-vpc with the following subnets only:
-
-  griffin-prod-wp
-    IP address block: 192.168.48.0/20
-  griffin-prod-mgmt
-    IP address block: 192.168.64.0/20
+    
+    griffin-prod-wp
+      IP address block: 192.168.48.0/20
+    griffin-prod-mgmt
+      IP address block: 192.168.64.0/20
 
 ### Task 3. Create bastion host
 Create a bastion host with two network interfaces, one connected to **griffin-dev-mgmt** and the other connected to **griffin-prod-mgmt**. Make sure you can SSH to the host. 
@@ -48,10 +48,10 @@ Create a bastion host with two network interfaces, one connected to **griffin-de
 Create a MySQL Cloud SQL Instance called **griffin-dev-db** in *REGION*.
 Connect to the instance and run the following SQL commands to prepare the WordPress environment:
   
-  CREATE DATABASE wordpress;
-  CREATE USER "wp_user"@"%" IDENTIFIED BY "stormwind_rules";
-  GRANT ALL PRIVILEGES ON wordpress.* TO "wp_user"@"%";
-  FLUSH PRIVILEGES;
+    CREATE DATABASE wordpress;
+    CREATE USER "wp_user"@"%" IDENTIFIED BY "stormwind_rules";
+    GRANT ALL PRIVILEGES ON wordpress.* TO "wp_user"@"%";
+    FLUSH PRIVILEGES;
 
 These SQL statements create the worpdress database and create a user with access to the wordpress database.
 
@@ -73,11 +73,12 @@ Make sure you configure the *username* to **wp_user** and *password* to **stormw
 You also need to provide a key for a service account that was already set up. This service account provides access to the database for a sidecar container.
 
 Use the command below to create the key, and then add the key to the Kubernetes environment:
+
     gcloud iam service-accounts keys create key.json \
         --iam-account=cloud-sql-proxy@$GOOGLE_CLOUD_PROJECT.iam.gserviceaccount.com
     kubectl create secret generic cloudsql-instance-credentials \
         --from-file key.json
-    
+
 ### Task 7. Create a WordPress deployment
 Now that you have provisioned the MySQL database, and set up the secrets and volume, you can create the deployment using **wp-deployment.yaml**.
 
