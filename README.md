@@ -1,4 +1,4 @@
-# Develop your Google Cloud Network
+# Develop your Google Cloud Network : Challenge Lab
 
 ## Challenge scenario
 As a cloud engineer at Jooli Inc. and recently trained with Google Cloud and Kubernetes, you have been asked to help a new team (Griffin) set up their environment. The team has asked for your help and has done some work, but needs you to complete the work.
@@ -7,21 +7,22 @@ You are expected to have the skills and knowledge for these tasks so don’t exp
 
 You need to complete the following tasks:
 
-Create a development VPC with three subnets manually
-Create a production VPC with three subnets manually
-Create a bastion that is connected to both VPCs
-Create a development Cloud SQL Instance and connect and prepare the WordPress environment
-Create a Kubernetes cluster in the development VPC for WordPress
-Prepare the Kubernetes cluster for the WordPress environment
-Create a WordPress deployment using the supplied configuration
-Enable monitoring of the cluster
-Provide access for an additional engineer
+  * Create a development VPC with three subnets manually
+  * Create a production VPC with three subnets manually
+  * Create a bastion that is connected to both VPCs
+  * Create a development Cloud SQL Instance and connect and prepare the WordPress environment
+  * Create a Kubernetes cluster in the development VPC for WordPress
+  * Prepare the Kubernetes cluster for the WordPress environment
+  * Create a WordPress deployment using the supplied configuration
+  * Enable monitoring of the cluster
+  * Provide access for an additional engineer
+  
 Some Jooli Inc. standards you should follow:
 
-Create all resources in the **REGION** region and **ZONE** zone, unless otherwise directed.
-Use the project VPCs.
-Naming is normally team-resource, e.g. an instance could be named **kraken-webserver1**.
-Allocate cost effective resource sizes. Projects are monitored and excessive resource use will result in the containing project's termination (and possibly yours), so beware. This is the guidance the monitoring team is willing to share: unless directed, use **e2-medium**.
+  * Create all resources in the **REGION** region and **ZONE** zone, unless otherwise directed.
+  * Use the project VPCs.
+  * Naming is normally team-resource, e.g. an instance could be named **kraken-webserver1**.
+  * Allocate cost effective resource sizes. Projects are monitored and excessive resource use will result in the containing project's termination (and possibly yours), so beware. This is the guidance the monitoring team is willing to share: unless directed, use **e2-medium**.
 
 ![image](https://github.com/user-attachments/assets/9df05bbb-3dca-40b7-a1d3-35854e38e7ac)
 
@@ -61,37 +62,42 @@ You will use the username and password in task 6.
 Create a 2 node cluster (e2-standard-4) called **griffin-dev**, in the **griffin-dev-wp** subnet, and in zone *ZONE*.
 
 ### Task 6. Prepare the Kubernetes cluster
-From Cloud Shell copy all files from **gs://cloud-training/gsp321/wp-k8s**.
+ * From Cloud Shell copy all files from **gs://cloud-training/gsp321/wp-k8s**.
 The WordPress server needs to access the MySQL database using the username and password you created in task 4.
 
-You do this by setting the values as secrets. WordPress also needs to store its working files outside the container, so you need to create a volume.
+ * You do this by setting the values as secrets. WordPress also needs to store its working files outside the container, so you need to create a volume.
 
-Add the following secrets and volume to the cluster using **wp-env.yaml**.
+ * Add the following secrets and volume to the cluster using **wp-env.yaml**.
 
-Make sure you configure the *username* to **wp_user** and *password* to **stormwind_rules** before creating the configuration.
+ * Make sure you configure the *username* to **wp_user** and *password* to **stormwind_rules** before creating the configuration.
 
 You also need to provide a key for a service account that was already set up. This service account provides access to the database for a sidecar container.
 
-Use the command below to create the key, and then add the key to the Kubernetes environment:
+ * Use the command below to create the key, and then add the key to the Kubernetes environment:
+  
+      gcloud iam service-accounts keys create key.json \
+          --iam-account=cloud-sql-proxy@$GOOGLE_CLOUD_PROJECT.iam.gserviceaccount.com
+      kubectl create secret generic cloudsql-instance-credentials \
+          --from-file key.json
 
-    gcloud iam service-accounts keys create key.json \
-        --iam-account=cloud-sql-proxy@$GOOGLE_CLOUD_PROJECT.iam.gserviceaccount.com
-    kubectl create secret generic cloudsql-instance-credentials \
-        --from-file key.json
 
 ### Task 7. Create a WordPress deployment
 Now that you have provisioned the MySQL database, and set up the secrets and volume, you can create the deployment using **wp-deployment.yaml**.
 
-Before you create the deployment you need to edit **wp-deployment.yaml**.
+ * Before you create the deployment you need to edit **wp-deployment.yaml**.
 
-Replace **YOUR_SQL_INSTANCE** with griffin-dev-db's **Instance connection name**.
+ * Replace **YOUR_SQL_INSTANCE** with griffin-dev-db's **Instance connection name**.
 
-Get the **Instance connection name** from your Cloud SQL instance.
+ * Get the **Instance connection name** from your Cloud SQL instance.
 
-After you create your WordPress deployment, create the service with **wp-service.yaml**.
+ * After you create your WordPress deployment, create the service with **wp-service.yaml**.
 
-Once the Load Balancer is created, you can visit the site and ensure you see the WordPress site installer.
+ * Once the Load Balancer is created, you can visit the site and ensure you see the WordPress site installer.
+
 At this point the dev team will take over and complete the install and you move on to the next task.
+
+![image](https://github.com/user-attachments/assets/1829d478-55ff-4456-86c7-505448be1fb8)
+
 
 ### Task 8. Enable monitoring
 Create an uptime check for your WordPress development site.
