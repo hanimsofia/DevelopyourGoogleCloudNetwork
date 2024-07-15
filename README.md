@@ -1,4 +1,4 @@
-# Develop your Google Cloud Network : Challenge Lab
+# Develop your Google Cloud Network 
 
 ## Challenge scenario
 As a cloud engineer at Jooli Inc. and recently trained with Google Cloud and Kubernetes, you have been asked to help a new team (Griffin) set up their environment. The team has asked for your help and has done some work, but needs you to complete the work.
